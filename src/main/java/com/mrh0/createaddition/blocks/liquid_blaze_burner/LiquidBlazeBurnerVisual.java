@@ -142,7 +142,11 @@ public class LiquidBlazeBurnerVisual extends AbstractBlockEntityVisual<LiquidBla
             goggles = null;
         }
 
-        if (hat == null) {
+        boolean hideStraw = blockEntity.isValidBlockAbove();
+        if (hideStraw && hat != null) {
+            hat.delete();
+            hat = null;
+        } else if (!hideStraw && hat == null) {
             hat = instancerProvider()
                     .instancer(InstanceTypes.TRANSFORMED,
                             Models.partial(
