@@ -118,24 +118,23 @@ public class LiquidBlazeBurnerRenderer extends SafeBlockEntityRenderer<LiquidBla
 
 		if (!hideStraw) {
 			SuperByteBuffer hatBuffer = CachedBuffers.partial(CAPartials.LIQUID_HAT, blockState);
-		if (modelTransform != null)
-			hatBuffer.transform(modelTransform);
-		hatBuffer.translate(0, headY, 0);
-		if (blazeModel == AllPartialModels.BLAZE_INERT) {
-			hatBuffer.translateY(0.5f)
-					.center()
-					.scale(0.75f)
-					.uncenter();
-		} else {
-			hatBuffer.translateY(0.75f);
-		}
-		hatBuffer
+			if (modelTransform != null)
+				hatBuffer.transform(modelTransform);
+			hatBuffer.translate(0, headY, 0);
+			if (blazeModel == AllPartialModels.BLAZE_INERT) {
+				hatBuffer.translateY(0.5f)
+						.center()
+						.scale(0.75f)
+						.uncenter();
+			} else {
+				hatBuffer.translateY(0.75f);
+			}
+			hatBuffer
 				.rotateCentered(horizontalAngle + Mth.PI, Direction.UP)
 				.translate(0.5f, 0, 0.5f)
 				.light(LightTexture.FULL_BRIGHT)
 				.renderInto(ms, bufferSource.getBuffer(RenderType.cutoutMipped()));
 		}
-
 		if (heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING)) {
 			PartialModel rodsModel = heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING ? AllPartialModels.BLAZE_BURNER_SUPER_RODS
 					: AllPartialModels.BLAZE_BURNER_RODS;
