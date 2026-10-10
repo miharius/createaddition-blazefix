@@ -57,7 +57,7 @@ public class LiquidBlazeBurnerRenderer extends SafeBlockEntityRenderer<LiquidBla
 
 		renderShared(ms, null, bufferSource,
 			level, blockState, heatLevel, animation, horizontalAngle,
-			canDrawFlame, drawGoggles, hashCode);
+			canDrawFlame, be.isValidBlockAbove(), drawGoggles, hashCode);
 	}
 
 	public static void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
@@ -79,12 +79,12 @@ public class LiquidBlazeBurnerRenderer extends SafeBlockEntityRenderer<LiquidBla
 
 		renderShared(matrices.getViewProjection(), matrices.getModel(), bufferSource,
 			level, state, heatLevel, 0, horizontalAngle,
-			false, drawGoggles, hashCode);
+			false, false, drawGoggles, hashCode);
 	}
 
 	static void renderShared(PoseStack ms, @Nullable PoseStack modelTransform, MultiBufferSource bufferSource,
 									 Level level, BlockState blockState, BlazeBurnerBlock.HeatLevel heatLevel, float animation, float horizontalAngle,
-									 boolean canDrawFlame, boolean drawGoggles, int hashCode) {
+									 boolean canDrawFlame, boolean hideStraw, boolean drawGoggles, int hashCode) {
 
 		boolean blockAbove = animation > 0.125f;
 		float time = AnimationTickHolder.getRenderTime(level);
@@ -116,7 +116,8 @@ public class LiquidBlazeBurnerRenderer extends SafeBlockEntityRenderer<LiquidBla
 			draw(gogglesBuffer, horizontalAngle, ms, bufferSource.getBuffer(RenderType.solid()));
 		}
 
-		SuperByteBuffer hatBuffer = CachedBuffers.partial(CAPartials.LIQUID_HAT, blockState);
+		if (!hideStraw) {
+			SuperByteBuffer hatBuffer = CachedBuffers.partial(CAPartials.LIQUID_HAT, blockState);
 		if (modelTransform != null)
 			hatBuffer.transform(modelTransform);
 		hatBuffer.translate(0, headY, 0);
@@ -133,6 +134,7 @@ public class LiquidBlazeBurnerRenderer extends SafeBlockEntityRenderer<LiquidBla
 				.translate(0.5f, 0, 0.5f)
 				.light(LightTexture.FULL_BRIGHT)
 				.renderInto(ms, bufferSource.getBuffer(RenderType.cutoutMipped()));
+		}
 
 		if (heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING)) {
 			PartialModel rodsModel = heatLevel == BlazeBurnerBlock.HeatLevel.SEETHING ? AllPartialModels.BLAZE_BURNER_SUPER_RODS
